@@ -1,37 +1,47 @@
-FIZZ_NUMBER = 3
-BUZZ_NUMBER = 5
-MAX_NUMBER = 100
+class FizzBuzz
+  attr_reader :rules
+
+  def initialize(size)
+    @list = (1..size)
+    @rules = FizzbuzzRules.new()
+  end
+
+  def values
+    @list.map { |item| convert(item) }
+  end
+
+  def convert(number)
+    rules = FizzbuzzRules.new()
+    rules.number = number
+    return rules.fizzbuzz if rules.fizzbuzz?
+    return rules.fizz if rules.fizz?
+    return rules.buzz if rules.buzz?
+    number
+  end
+
+end
 
 class FizzbuzzRules
-  def fizzbuzz(arg)
-    fizz = fizz(arg)
-    buzz = buzz(arg)
-    return fizz.to_s + buzz.to_s if fizz || buzz
-    arg
+  attr_reader :fizz, :buzz, :fizzbuzz, :fizz_multiple, :buzz_multiple
+  attr_accessor :number
+  def initialize(fizz = "fizz", buzz = "buzz", fizz_multiple = 3, buzz_multiple = 5)
+    @fizz = fizz
+    @buzz = buzz
+    @fizzbuzz = fizz + buzz
+    @fizz_multiple = fizz_multiple
+    @buzz_multiple = buzz_multiple
   end
 
-  def fizz(arg)
-    "Fizz" if arg % FIZZ_NUMBER == 0 || arg.to_s.include?(FIZZ_NUMBER.to_s)
+  def fizz?
+    number % @fizz_multiple == 0 || number.to_s.include?(@fizz_multiple.to_s)
   end
 
-  def buzz(arg)
-    "Buzz" if arg % BUZZ_NUMBER == 0 || arg.to_s.include?(BUZZ_NUMBER.to_s)
-  end
-end
-
-class Fizzbuzz < FizzbuzzRules
-  attr_reader :numbers
-
-  def initialize
-    @numbers = (0..MAX_NUMBER).to_a
-    @numbers = @numbers.map { |number| fizzbuzz(number) }
+  def buzz?
+    number % @buzz_multiple == 0
   end
 
-  def to_s
-    @numbers.each { |number| puts number }
+  def fizzbuzz?
+    fizz? && buzz?
   end
 
 end
-
-fizzbuzz = Fizzbuzz.new
-fizzbuzz.to_s
